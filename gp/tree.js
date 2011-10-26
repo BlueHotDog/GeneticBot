@@ -12,15 +12,24 @@ _.extend(Tree.prototype, {
 		var node = new Tree(value);
 		this.nodes.push(node);
 	},
-	print: function() {
-		console.log("%j",this);
+	print: function(depth) {
+		depth = depth || 0;
+		depth += 1;
+		var st = "";
+		for(var i=0;i<depth;i++) {
+			st += "="
+		}
+		console.log("%s>%s",st,this.value);
+		this.nodes.forEach(function(node) {
+			node.print(depth);
+		});
 	},
 	execute: function() {
 		var params = [];
 		this.nodes.forEach(function(node) {
 			params.push(node.execute());
 		});
-		if(_(this.value).isFunction()===false){
+		if (_(this.value).isFunction()===false) {
 			return this.value;
 		} else {
 			return this.value.apply(this,params);
@@ -28,14 +37,7 @@ _.extend(Tree.prototype, {
 	}
 });
 
+exports.Tree = Tree;
 
 
-var tree = new Tree(function(a,b) {
-	return a+b;
-});
-tree.addNode(10);
-tree.addNode(5);
-
-tree.print();
-console.log(tree.execute());
 
