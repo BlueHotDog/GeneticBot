@@ -5,7 +5,7 @@ eyes 	= require('eyes').inspector({ hideFunctions: false });
 
 
 class Generator
-	constructor: (@maxDepth=17,@terminalPrecent=3)->
+	constructor: (@maxDepth=4,@terminalPrecent=3)->
 		@terminals = []
 		@funcs = []
 	addTerminal: (val) ->
@@ -31,46 +31,21 @@ class Generator
 		if newNode.type is "function"
 			node.value = newNode.value.value
 			node.name = newNode.value.name
+			node.type = "function"
 			for i in [1..newNode.value.value.length]
 				node.addNode(@generate(null,depth))
 		else 
 			node = new tree.Tree(newNode.value)
+			node.type = "terminal"
 		node
+
 	_pickRandom: (arr)-> 
 		arr[Math.floor(Math.random()*arr.length)]
 
+exports.generator = Generator
 
 
 
-
-g = new Generator()
-g.terminals = [
-	1,
-	2,
-	3,
-	4,
-	5,
-	6
-]
-plus= (a,b) ->
-	a+b
-minus= (a,b) ->
-	a-b
-mult= (a,b) ->
-	a*b
-devide= (a,b) ->
-	if b==0 then 0 else a/b
-
-g.addFunction(plus,"plus")
-g.addFunction(minus,"minus")
-g.addFunction(mult,"mult")
-g.addFunction(devide,"devide")
-
-temp = g.generate()
-
-# console.log("%j",temp);
-temp.print();
-console.log(temp.execute());
 
 
 
